@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jom Belajar Bersama</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#eaf8ff;color:#333}
+.screen{display:none;min-height:100vh;padding:20px;box-sizing:border-box;text-align:center}
+.active{display:block}
+h1{color:#1b7bdc}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:420px;margin:20px auto}
+.card,.btn{background:#fff;border:none;border-radius:18px;padding:18px;font-size:52px;
+box-shadow:0 3px 8px rgba(0,0,0,.15);cursor:pointer}
+.btn{font-size:22px;padding:14px 24px}
+#msg{font-size:28px;font-weight:bold;height:40px}
+.top{display:flex;justify-content:space-between;max-width:420px;margin:auto;font-size:20px}
+</style>
+</head>
+<body>
+
+<div id="menu" class="screen active">
+<h1>🎈 Jom Belajar Bersama</h1>
+<p>Klik butang untuk mula.</p>
+<button class="btn" id="startBtn">▶️ Mula</button>
+</div>
+
+<div id="game" class="screen">
+<div class="top">
+<div>⭐ <span id="score">0</span></div>
+<div>Soalan <span id="qno">1</span>/10</div>
+</div>
+
+<h2 id="question"></h2>
+<div class="grid" id="grid"></div>
+<div id="msg"></div>
+</div>
+
+<div id="end" class="screen">
+<h1>🏆 Tahniah!</h1>
+<h2>Markah: <span id="finalScore"></span>/10</h2>
+<button class="btn" onclick="restart()">Main Lagi</button>
+</div>
+
+<script>
+const questions=[
+{q:"Cari Kucing",a:"🐱",o:["🐱","🐶","🐰","🐻"]},
+{q:"Cari Epal",a:"🍎",o:["🍌","🍎","🍇","🍊"]},
+{q:"Cari Warna Merah",a:"🔴",o:["🔴","🟢","🔵","🟡"]},
+{q:"Cari Gajah",a:"🐘",o:["🐭","🐘","🦁","🐵"]},
+{q:"Cari Bola",a:"⚽",o:["🏀","⚽","🎾","🏈"]},
+{q:"Cari Pisang",a:"🍌",o:["🍉","🍌","🍎","🍓"]},
+{q:"Cari Arnab",a:"🐰",o:["🐰","🐶","🐱","🐼"]},
+{q:"Cari Warna Biru",a:"🔵",o:["🟡","🔴","🟢","🔵"]},
+{q:"Cari Anggur",a:"🍇",o:["🍇","🍍","🍎","🍊"]},
+{q:"Cari Singa",a:"🦁",o:["🐻","🐼","🦁","🐯"]}
+];
+let idx=0,score=0;
+
+document.getElementById("startBtn").addEventListener("click",()=>{
+show("game"); load();
+});
+
+function show(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function load(){
+document.getElementById("msg").textContent="";
+let q=questions[idx];
+document.getElementById("question").textContent=q.q;
+document.getElementById("qno").textContent=idx+1;
+const g=document.getElementById("grid");
+g.innerHTML="";
+q.o.sort(()=>Math.random()-0.5).forEach(e=>{
+let b=document.createElement("button");
+b.className="card";
+b.textContent=e;
+b.onclick=()=>answer(e);
+g.appendChild(b);
+});
+}
+
+function answer(v){
+if(v===questions[idx].a){
+score++;
+document.getElementById("score").textContent=score;
+document.getElementById("msg").textContent="🎉 Betul!";
+}else{
+document.getElementById("msg").textContent="😊 Cuba Lagi!";
+}
+setTimeout(()=>{
+idx++;
+if(idx>=questions.length){
+document.getElementById("finalScore").textContent=score;
+show("end");
+}else{
+load();
+}
+},700);
+}
+
+function restart(){
+idx=0;score=0;
+document.getElementById("score").textContent=0;
+show("game");
+load();
+}
+</script>
+
+</body>
+</html>
